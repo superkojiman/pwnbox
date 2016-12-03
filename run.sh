@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# Run superkojiman/pwnbox container in docker. 
 # Store your .gdbinit, .radare2rc, .vimrc, etc in a ./rc directory. The contents will be copied to
 # /root/ in the container.
 
@@ -11,19 +10,18 @@ GREEN=$ESC"32m"
 BLUE=$ESC"34m"
 
 if [[ -z ${1} ]]; then
-    echo -e "${RED}Missing argument CTF name.${RESET}"
+    echo -e "${RED}Missing argument container name.${RESET}"
     exit 0
 fi
 
-ctf_name=${1}
+cont_name=${1}
 
 # Create docker container and run in the background
 docker run -it \
     -d \
-    -h ${ctf_name} \
+    -h ${cont_name} \
     --security-opt seccomp:unconfined \
-    --name ${ctf_name} \
-    superkojiman/pwnbox
+    --name ${cont_name}
 
 # Tar config files in rc and extract it into the container
 if [[ -d rc ]]; then
@@ -37,30 +35,22 @@ if [[ -d rc ]]; then
         fi
     done
     cd - > /dev/null 2>&1
-    cat rc/rc.tar | docker cp - ${ctf_name}:/root/
+    cat rc/rc.tar | docker cp - ${cont_name}:/root/
 else
     echo -e "${RED}No rc directory found. Nothing to copy to container.${RESET}"
 fi
 
 # Create stop/rm script for container
-cat << EOF > ${ctf_name}-stop.sh
+cat << EOF > ${cont_name}-stop.sh
 #!/bin/bash
-docker stop ${ctf_name}
-docker rm ${ctf_name}
-rm -f ${ctf_name}-stop.sh
+docker stop ${cont_name}
+docker rm ${cont_name}
+rm -f ${cont_name}-stop.sh
 EOF
-chmod 755 ${ctf_name}-stop.sh
+chmod 755 ${cont_name}-stop.sh
 
 # Create a workdir for this CTF
-docker exec ${ctf_name} mkdir /root/work
+docker exec ${cont_name} mkdir /root/work
 
 # Get a shell
-echo -e "${GREEN}                         ______               ${RESET}"
-echo -e "${GREEN}___________      ___________  /___________  __${RESET}"
-echo -e "${GREEN}___  __ \\_ | /| / /_  __ \\_  __ \\  __ \\_  |/_/${RESET}"
-echo -e "${GREEN}__  /_/ /_ |/ |/ /_  / / /  /_/ / /_/ /_>  <  ${RESET}"
-echo -e "${GREEN}_  .___/____/|__/ /_/ /_//_.___/\\____//_/|_|  ${RESET}"
-echo -e "${GREEN}/_/                           by superkojiman  ${RESET}"
-echo ""
-#docker exec -it ${ctf_name} /usr/bin/tmux
-docker attach ${ctf_name}
+docker attach ${cont_name}
