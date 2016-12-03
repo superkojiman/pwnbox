@@ -74,7 +74,7 @@ RUN bash -c 'source /etc/bash_completion.d/virtualenvwrapper && \
     pip install angr && \
     deactivate'
 
-# instlal pwntools 3
+# install pwntools 3
 RUN pip install --upgrade pwntools
 
 #-------------------------------------#
