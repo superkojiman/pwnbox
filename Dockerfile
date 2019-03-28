@@ -7,8 +7,8 @@
 # To build: docker build -t superkojiman/pwnbox                  #
 #----------------------------------------------------------------#
 
-FROM phusion/baseimage:0.9.19
-MAINTAINER superkojiman@techorganic.com
+FROM phusion/baseimage
+LABEL maintainer="superkojiman@techorganic.com"
 
 ENV DEBIAN_FRONTEND noninteractive
 
