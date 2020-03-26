@@ -19,8 +19,9 @@ RUN apt-get update && apt-get -y upgrade
 # Install packages from Ubuntu repos  #
 #-------------------------------------#
 RUN apt-get install -y \
-    apt-utils \
     sudo \
+    apt-utils \
+    locales \
     build-essential \
     gcc-multilib \
     g++-multilib \
@@ -70,6 +71,10 @@ RUN apt-get install -y \
 
 RUN apt-get -y autoremove
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# update locale to include en_US.UTF-8
+RUN locale-gen en_US.UTF-8
+RUN update-locale
 
 #-------------------------------------#
 # Install stuff from pip repos        #
