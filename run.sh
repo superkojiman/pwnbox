@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 # Run superkojiman/pwnbox container in docker.
-# Store your .gdbinit, .radare2rc, .vimrc, etc in a ./rc directory. The contents will be copied to
-# /root/ in the container.
+# 
+# Store your .gdbinit, .radare2rc, .vimrc, etc in a ./rc directory and 
+# the contents will be copied to /root/ in the container.
 
 ESC="\x1B["
 RESET=$ESC"39m"
