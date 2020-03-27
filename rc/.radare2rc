@@ -1,0 +1,4 @@
+e cfg.fortunes = false
+e scr.utf8 = true
+e asm.cmt.right=true
+# e asm.pseudo = true
