@@ -18,6 +18,12 @@ fi
 
 ctf_name=${1}
 
+# Create a volume for this container 
+docker create -v /root/work --name ${ctf_name}_data superkojiman/pwnbox
+
+# Get the volume name for the delete script
+vol_name=`docker inspect ${ctf_name}_data | jq '.[].Mounts[].Name' | sed 's/\"//g'`
+
 # Create docker container and run in the background
 # Add this if you need to modify anything in /proc:  --privileged 
 docker run -it \
@@ -25,6 +31,7 @@ docker run -it \
     -d \
     --security-opt seccomp:unconfined \
     --name ${ctf_name} \
+    --volumes-from ${ctf_name}_data \
     superkojiman/pwnbox
 
 # Tar config files in rc and extract it into the container
@@ -48,14 +55,17 @@ fi
 # Create stop/rm script for container
 cat << EOF > ${ctf_name}-stop.sh
 #!/bin/bash
+echo "Removing ${ctf_name} containers and volumes"
 docker stop ${ctf_name}
 docker rm ${ctf_name}
+docker rm ${ctf_name}_data
+docker volume rm ${vol_name}
 rm -f ${ctf_name}-stop.sh
 EOF
 chmod 755 ${ctf_name}-stop.sh
 
 # Create a workdir for this CTF
-docker exec ${ctf_name} mkdir /root/work
+#docker exec ${ctf_name} mkdir /root/work
 
 # Get a shell
 echo -e "${GREEN}                         ______               ${RESET}"
