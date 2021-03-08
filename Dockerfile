@@ -30,6 +30,8 @@ RUN apt-get install -y \
     python3-dev \
     python3-pip \
     ipython \
+    man-db \
+    manpages-posix \
     default-jdk \
     net-tools \
     nasm \
