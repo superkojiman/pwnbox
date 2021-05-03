@@ -92,7 +92,7 @@ RUN pip3 install ropper
 
 # install pwntools 3
 RUN python3 -m pip install --upgrade pip
-RUN python3 -m pip install --upgrade git+https://github.com/Gallopsled/pwntools.git@dev
+RUN python3 -m pip install --upgrade pwntools
 
 # install xortool
 RUN python3 -m pip install xortool
