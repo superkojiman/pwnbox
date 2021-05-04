@@ -10,8 +10,10 @@
 FROM ubuntu:18.04
 MAINTAINER superkojiman@techorganic.com
 
+ENV LC_CTYPE C.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
 
+RUN yes | unminimize
 RUN dpkg --add-architecture i386
 RUN apt-get update && apt-get -y upgrade
 
@@ -29,7 +31,7 @@ RUN apt-get install -y \
     gdb-multiarch \
     python3-dev \
     python3-pip \
-    ipython \
+    ipython3 \
     man-db \
     manpages-posix \
     default-jdk \
@@ -89,6 +91,8 @@ RUN pip3 install uncompyle6
 RUN pip3 install pipenv
 RUN pip3 install manticore[native]
 RUN pip3 install ropper
+RUN pip3 install meson
+RUN pip3 install ninja
 
 # install pwntools 3
 RUN python3 -m pip install --upgrade pip
@@ -100,21 +104,12 @@ RUN python3 -m pip install xortool
 #-------------------------------------#
 # Install stuff from GitHub repos     #
 #-------------------------------------#
-# install radrare2
-RUN git clone https://github.com/radare/radare2.git /opt/radare2 && \
-    cd /opt/radare2 && \
-    git fetch --tags && \
-    git checkout $(git describe --tags $(git rev-list --tags --max-count=1)) && \
-    ./sys/install.sh  && \
-    make symstall
-
-# install villoc
-RUN git clone https://github.com/wapiflapi/villoc.git /opt/villoc 
-
-# install preeny
-RUN git clone https://github.com/zardus/preeny.git /opt/preeny && \
-    cd /opt/preeny && \
-    make
+# install rizin
+RUN git clone https://github.com/rizinorg/rizin /opt/rizin && \
+    cd /opt/rizin && \
+    meson build && \
+    ninja -C build && \
+    ninja -C build install
 
 # install libc-database
 RUN git clone https://github.com/niklasb/libc-database /opt/libc-database
